@@ -35,7 +35,7 @@ var fightOrSkip = function() {
     }
   }
   return false;
-}
+};
 
 //fight function (now with parameter for enemy's name)
 var fight = function(enemy) {
@@ -61,13 +61,13 @@ var fight = function(enemy) {
       enemy.health = Math.max(0, enemy.health - damage);
       console.log(
         playerInfo.name + 
-        ' attacked ' + 
-        enemy.name + 
-        ' . ' + 
-        enemy.name + 
-        ' now has ' + 
-        enemy.health + 
-        ' health remaining.'
+         ' attacked ' + 
+         enemy.name + 
+         ' . ' + 
+         enemy.name + 
+         ' now has ' + 
+         enemy.health + 
+         ' health remaining.'
       );
 
       //check enemy's health
@@ -120,6 +120,9 @@ var startGame = function() {
 
   // fight each enemy-robot by looping over them and fighting them one at a time
  for (var i = 0; i < enemyInfo.length; i++) {
+   // check player stats 
+   console.log(playerInfo);
+
    // if player is still alive, keep fighting
    if (playerInfo.health > 0) {
      //let player know what round they are in, remember that arrays start at 0 so it needs to have 1 added to it
@@ -130,6 +133,8 @@ var startGame = function() {
 
      // set health for picked enemy
      pickedEnemyObj.health = randomNumber(40, 60);
+
+     console.log(pickedEnemyObj);
 
      //pass the pickedEnemyName variable's value into the fight function, where it will assume the value of the enemyName parameter
      fight(pickedEnemyObj);
@@ -145,7 +150,7 @@ var startGame = function() {
         } 
       }
     }
-    // if player isn't alive, break the loop and  let endGame function run
+    // if player isn't alive, break the loop and let endGame function run
     else {
       window.alert('You have lost your robot in battle! Game Over!');
      break;
@@ -160,11 +165,20 @@ var startGame = function() {
 var endGame = function() {
   window.alert("The game has now ended. Let's see how you did!");
 
-  // if player is still alive, player wins!
-  if (playerInfo.health > 0) {
-    window.alert("Great job, you've survived the game! You now have a score of " + playerInfo.money + ".");
-  } else {
-    window.alert("You've lost yor robot in battle.");
+  // check localStorage for high score, if it's not there, use 0
+  var highScore = localStorage.getItem("highscore");
+  if (highScore === null) {
+    highScore = 0;
+  }
+  // if player has more money than the high score, player has new high score!
+  if (playerInfo.money > highScore) {
+    localStorage.setItem("highscore", playerInfo.money);
+    localStorage.setItem("name", playerInfo.name);
+
+    alert(playerInfo.name + " now has the high score of " + playerInfo.money+ "!");
+  }
+  else {
+    alert(playerInfo.name + " did not beat the high score of " + highScore + ". Maybe next time!");
   }
 
   //ask player if they'd like to play again
@@ -186,6 +200,7 @@ var shop = function() {
 
   // function that converts strings to integers
   shopOptionPrompt = parseInt(shopOptionPrompt);
+
   // use switch case to carry out action
   switch (shopOptionPrompt) {
     case 1:
@@ -207,6 +222,7 @@ var shop = function() {
 // function to set name
 var getPlayerName = function() {
   var name = "";
+
   while (name === "" || name === null) {
     name = prompt("What is your robot's name?");
   }
@@ -230,8 +246,7 @@ var playerInfo = {
       window.alert("Refilling player's health by 20 for 7 dollars.");
       this.health += 20;
       this.money -= 7;
-    }
-    else {
+    } else {
       window.alert("You don't have enough money!");
     }
   },
@@ -240,8 +255,7 @@ var playerInfo = {
       window.alert("Upgrading player's attack by 6 for 7 dollars.");
       this.attack += 6;
       this.money -= 7;
-    }
-    else {
+    } else {
       window.alert("You don't have enough money!");
     }
   }
